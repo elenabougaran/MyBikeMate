@@ -70,8 +70,6 @@ struct DashboardView: View {
                                         // Snap vers medium (0.5) ou large (0.1)
                                         if newPosition < 0.3 {
                                             sheetPosition = 0.2 // Position haute
-                                        } else if newPosition > 0.3 && newPosition < 0.6 {
-                                            sheetPosition = 0.5 // Position moyenne
                                         } else {
                                             sheetPosition = 0.7 // Position basse
                                         }

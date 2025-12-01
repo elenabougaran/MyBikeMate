@@ -43,6 +43,8 @@
 		F3823AF52E5C9AB700B9331B /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3823AF42E5C9AB700B9331B /* NotificationViewModel.swift */; };
 		F3823AF72E5C9E4400B9331B /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3823AF62E5C9E4400B9331B /* AppError.swift */; };
 		F3877CE82E672CF900CEECA9 /* MaintenanceDetailsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3877CE72E672CF900CEECA9 /* MaintenanceDetailsVM.swift */; };
+		F3912FC82EDDD0550093E7BD /* ReminderSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3912FC72EDDD0550093E7BD /* ReminderSchedule.swift */; };
+		F3912FCA2EDDD6760093E7BD /* AuthorizationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3912FC92EDDD6760093E7BD /* AuthorizationStatus.swift */; };
 		F39381FF2EAB66EC009D27F1 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39381FE2EAB66EC009D27F1 /* CircularProgressView.swift */; };
 		F39382012EABB2A7009D27F1 /* MaintenanceDetailsBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39382002EABB2A7009D27F1 /* MaintenanceDetailsBackgroundView.swift */; };
 		F39382052EABD379009D27F1 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = F39382042EABD379009D27F1 /* ConfettiSwiftUI */; };
@@ -146,6 +148,8 @@
 		F3823AF42E5C9AB700B9331B /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		F3823AF62E5C9E4400B9331B /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		F3877CE72E672CF900CEECA9 /* MaintenanceDetailsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceDetailsVM.swift; sourceTree = "<group>"; };
+		F3912FC72EDDD0550093E7BD /* ReminderSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderSchedule.swift; sourceTree = "<group>"; };
+		F3912FC92EDDD6760093E7BD /* AuthorizationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStatus.swift; sourceTree = "<group>"; };
 		F39381FE2EAB66EC009D27F1 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		F39382002EABB2A7009D27F1 /* MaintenanceDetailsBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceDetailsBackgroundView.swift; sourceTree = "<group>"; };
 		F39891502E77101400245639 /* ExportPDFHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPDFHelper.swift; sourceTree = "<group>"; };
@@ -461,6 +465,8 @@
 			isa = PBXGroup;
 			children = (
 				F3823AF62E5C9E4400B9331B /* AppError.swift */,
+				F3912FC72EDDD0550093E7BD /* ReminderSchedule.swift */,
+				F3912FC92EDDD6760093E7BD /* AuthorizationStatus.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -861,6 +867,7 @@
 				F3BFC9A52E33810900043AB8 /* CoreDataManager.swift in Sources */,
 				F3823AF52E5C9AB700B9331B /* NotificationViewModel.swift in Sources */,
 				F3BFC9A62E33810900043AB8 /* CoreDataManager+MaintenanceStore.swift in Sources */,
+				F3912FCA2EDDD6760093E7BD /* AuthorizationStatus.swift in Sources */,
 				F3BFC9A82E33810900043AB8 /* CoreDataManager+BikeStore.swift in Sources */,
 				F37D82832E5F601800F92A50 /* CustomTextField.swift in Sources */,
 				F3BDB2F12E56033C0041F142 /* MaintenanceType.swift in Sources */,
@@ -871,6 +878,7 @@
 				F339FAAA2E54842A00F2CECC /* ToDoMaintenanceRow.swift in Sources */,
 				F3BFC9AB2E33810900043AB8 /* ManagedBike.swift in Sources */,
 				F39381FF2EAB66EC009D27F1 /* CircularProgressView.swift in Sources */,
+				F3912FC82EDDD0550093E7BD /* ReminderSchedule.swift in Sources */,
 				F3D7FCA02E6344250042A29A /* MaintenanceListVM.swift in Sources */,
 				F3823AE92E5C635E00B9331B /* SettingsView.swift in Sources */,
 				F361F6142EB8BD5100100008 /* BikeDetailsSheet.swift in Sources */,

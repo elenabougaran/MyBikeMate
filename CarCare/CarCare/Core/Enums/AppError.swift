@@ -16,8 +16,12 @@ enum AppError: Error, LocalizedError {
 	case saveDataFailed(SaveCocoaError)
 	
 	//Erreurs liées aux notifications
-	case notificationError(Error)
-	case notificationNotAuthorized
+    case notificationPermissionDenied //Utilisateur a refusé les notifs
+    case notificationAuthorizationFailed //Erreur systeme lors de la demande d'autorisation
+    case notificationSchedulingFailed(Error) //Erreur lors de la planificiation d'une notif
+	case notificationError(Error) //Erreur générique de notif
+    
+	//case notificationNotAuthorized
     case notificationFailed(String)
 	
 	case bikeNotFound
@@ -44,10 +48,21 @@ extension AppError {
 		case .saveDataFailed(let saveCocoaError):
 			let format = NSLocalizedString("save_data_failed", comment: "Error occurred while saving data")
 			return String(format: format, saveCocoaError.localizedDescription)
-		case .notificationError(_):
-			return NSLocalizedString("notification_error", comment: "Error occurred while sending notification")
-		case .notificationNotAuthorized:
-			return NSLocalizedString("notification_not_authorized", comment: "Notifications not authorized")
+        case .notificationPermissionDenied:
+            return NSLocalizedString("notification_permission_denied", comment: "User denied notification permissions")
+            
+        case .notificationAuthorizationFailed:
+            return NSLocalizedString("notification_authorization_failed", comment: "Failed to request notification authorization")
+            
+        case .notificationSchedulingFailed(let error):
+            let format = NSLocalizedString("notification_scheduling_failed", comment: "Failed to schedule notification")
+            return String(format: format, error.localizedDescription)
+            
+        case .notificationError(let error):
+            let format = NSLocalizedString("notification_error", comment: "Notification error occurred")
+            return String(format: format, error.localizedDescription)
+            //case .notificationNotAuthorized:
+            //return NSLocalizedString("notification_not_authorized", comment: "Notifications not authorized")
         case .notificationFailed(let message):
             return message.isEmpty ? NSLocalizedString("notification_failed", comment: "") : message
         case .bikeNotFound:

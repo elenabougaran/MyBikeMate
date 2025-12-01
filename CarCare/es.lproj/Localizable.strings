@@ -29,7 +29,14 @@
 //NotificationVM
 "notification_title" = "Mantenimiento próximo";
 "notification_body" = "Su mantenimiento de %@ está programado para %@";
-
+"notification_permission_denied" = "Notificaciones desactivadas. Actívalas en Ajustes > MyCarCheckup.";
+"notification_authorization_failed" = "Error de autorización de notificaciones. Inténtalo de nuevo más tarde.";
+"notification_scheduling_failed" = "No se puede programar el recordatorio: %@";
+"notification_error" = "Error de notificación: %@";
+"notifications_disabled_title" = "Notificaciones Desactivadas";
+"notifications_disabled_message" = "Activa las notificaciones en Ajustes > MyCarCheckup para recibir recordatorios.";
+"cancel_button" = "Cancelar";
+"open_settings_button" = "Abrir Ajustes";
 
 //RegistrationView
 "welcome_key" = "¡Bienvenido a la aplicación!";

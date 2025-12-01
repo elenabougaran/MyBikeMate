@@ -123,6 +123,7 @@ struct AddMaintenanceView: View {
 					get: { VM.selectedMaintenanceDate ?? Date() },   // valeur par défaut si nil
 					set: { VM.selectedMaintenanceDate = $0 }
 				),
+                in: ...Date(),
 				displayedComponents: [.date]
 			)
 			.datePickerStyle(.wheel)

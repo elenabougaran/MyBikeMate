@@ -10,6 +10,7 @@ import SwiftUI
 struct MaintenanceDetailsView: View {
 	@AppStorage("isDarkMode") private var isDarkMode: Bool = false
 	@Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
 	@ObservedObject var bikeVM: BikeVM // utile pour l'injecter dans AddMaintenanceView
 	@ObservedObject var maintenanceVM: MaintenanceVM
 	@ObservedObject var notificationVM: NotificationViewModel
@@ -166,6 +167,13 @@ struct MaintenanceDetailsView: View {
                                 .labelsHidden()
                                 .accessibilityLabel("Reminder")
                                 .accessibilityHint("Enable or disable notification for this maintenance")
+                                .onChange(of: notificationVM.isAuthorized) { oldValue, newValue in
+                                    if newValue {
+                                        Task {
+                                            await notificationVM.requestAndScheduleNotifications()
+                                        }
+                                    }
+                                }
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                             .foregroundColor(Color("TextColor"))
@@ -364,6 +372,32 @@ struct MaintenanceDetailsView: View {
 					)
 				}
 			}
+            .alert(
+                NSLocalizedString("notifications_disabled_title", comment: ""),
+                isPresented: $notificationVM.showSettingsAlert
+            ) {
+                Button(NSLocalizedString("cancel_button", comment: ""), role: .cancel) {
+                    notificationVM.showSettingsAlert = false
+                }
+                
+                Button(NSLocalizedString("open_settings_button", comment: "")) {
+                    notificationVM.openSettings()
+                    notificationVM.showSettingsAlert = false
+                }
+            } message: {
+                Text(NSLocalizedString("notifications_disabled_message", comment: ""))
+            }
+            .onChange(of: scenePhase) { oldPhase, newPhase in
+                if newPhase == .active {
+#if DEBUG
+                    print("🔄 App redevenue active - vérification des autorisations")
+#endif
+                    
+                    Task {
+                        await notificationVM.checkAuthorizationStatus()
+                    }
+                }
+            }
 		} else {
 			Text("Maintenance not found")
                 .accessibilityLabel("Maintenance not found")

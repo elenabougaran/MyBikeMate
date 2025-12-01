@@ -29,6 +29,14 @@
 //NotificationVM
 "notification_title" = "Entretien à venir";
 "notification_body" = "Votre entretien %@ est prévu le %@";
+"notification_permission_denied" = "Notifications désactivées. Activez-les dans Réglages > MyCarCheckup.";
+"notification_authorization_failed" = "Erreur d'autorisation des notifications. Réessayez plus tard.";
+"notification_scheduling_failed" = "Impossible de programmer le rappel : %@";
+"notification_error" = "Erreur de notification : %@";
+"notifications_disabled_title" = "Notifications désactivées";
+"notifications_disabled_message" = "Activez les notifications dans Réglages > MyCarCheckup pour recevoir les rappels.";
+"cancel_button" = "Annuler";
+"open_settings_button" = "Ouvrir Réglages";
 
 //RegistrationView
 "welcome_key" = "Bienvenue dans l'application!";
@@ -44,7 +52,7 @@
 "navigation_title_modify_bike_key" = "Mon vélo";
 "bike_year_label" = "Fabrication : ";
 "last_maintenance_key" = "Dernier entretien";
-"button_modify_bike_information" = "Modifer les infos du vélo";
+"button_modify_bike_information" = "Modifier les infos du vélo";
 "button_Add_Maintenance" = "Ajouter un entretien";
 "no_date_key" = "Pas de date";
 "identification_number_key" = "Identification : ";
@@ -67,7 +75,7 @@
 //BikeInformationView
 "return_key" = "Retour";
 "button_delete_bike" = "Supprimer mon vélo";
-"button_Modify_information_key" = "Modifiers les informations";
+"button_Modify_information_key" = "Modifier les informations";
 "delete_bike_confirmation_title" = "Êtes-vous sûr de vouloir supprimer le vélo ?";
 "delete_bike_confirm" = "Supprimer";
 "delete_bike_cancel" = "Annuler";
@@ -146,7 +154,7 @@
 "run_software_and_battery_diagnostics_description" = "Les vélos électriques modernes possèdent une électronique de contrôle (moteur, batterie, capteurs). Une fois par an, fais un diagnostic chez un réparateur agréé. Cela permet de vérifier l’état de la batterie (capacité restante), de mettre à jour le firmware et de détecter d’éventuelles erreurs avant qu’elles ne posent problème. Il faut surveiller régulièrement l’autonomie de la batterie et vérifier qu’elle ne chauffe pas pendant l’utilisation du vélo. En cas de chute ou de choc, la batterie doit être remplacée immédiatement. En effet, un impact peut déséquilibrer les cellules internes, ce qui présente un risque sérieux d’inflammation ou d’endommagement irréversible. \n Ne tente jamais de continuer à utiliser une batterie endommagée.";
 
 //Enum BikeType
-"manual" = "Manuel";
+"manual" = "Musculaire";
 "electric" = "Électrique";
 
 //Error

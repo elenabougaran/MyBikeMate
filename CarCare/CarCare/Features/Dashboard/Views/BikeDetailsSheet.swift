@@ -33,11 +33,13 @@ struct BikeDetailsSheet: View {
     var body: some View {
         VStack(spacing: 0) {
             // Handle indicator
-            Capsule()
+           /* Capsule()
                 .fill(Color.gray.opacity(0.4))
                 .frame(width: 40, height: 5)
                 .padding(.top, 12)
-                .padding(.bottom, 20)
+                .padding(.bottom, 20)*/
+            DragHandleArea()
+                .frame(height: 80)
             
                 ScrollView {
                     VStack(spacing: 20) {
@@ -96,7 +98,7 @@ struct BikeDetailsSheet: View {
                                     .padding(.leading, 15)
 
                                 Text("\(maintenanceVM.overallStatus.label)")
-                                    .font(.system(size: 16, weight: .bold, design: .default))
+                                    .font(.system(size: 14, weight: .bold, design: .default))
                                     .foregroundColor(maintenanceVM.overallStatus == .aJour ? Color("DoneColor") :
                                                         maintenanceVM.overallStatus == .bientotAPrevoir ? Color("InProgressColor") :
                                                         Color("ToDoColor"))
@@ -265,3 +267,22 @@ struct BikeDetailsSheet: View {
 }
 
 
+struct DragHandleArea: View {
+    var body: some View {
+        VStack(spacing: 7) {
+            // Indicateur visuel classique
+            RoundedRectangle(cornerRadius: 3)
+                .fill(Color.secondary.opacity(0.5))
+                .frame(width: 50, height: 6)
+                .padding(.top, 12)
+            
+            // Texte d'aide
+            Text("Glisser pour agrandir")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color.clear)
+        .contentShape(Rectangle())
+    }
+}

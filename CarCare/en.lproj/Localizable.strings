@@ -30,6 +30,14 @@
 //NotificationVM
 "notification_title" = "Upcoming Maintenance";
 "notification_body" = "Your %@ maintenance is scheduled for %@";
+"notification_permission_denied" = "Notifications are disabled. Enable them in Settings > MyCarCheckup.";
+"notification_authorization_failed" = "Notification authorization failed. Please try again later.";
+"notification_scheduling_failed" = "Unable to schedule the reminder: %@";
+"notification_error" = "Notification error: %@";
+"notifications_disabled_title" = "Notifications Disabled";
+"notifications_disabled_message" = "Enable notifications in Settings > MyCarCheckup to receive reminders.";
+"cancel_button" = "Cancel";
+"open_settings_button" = "Open Settings";
 
 //RegistrationView
 "welcome_key" = "Welcome to the app!";

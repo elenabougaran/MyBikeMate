@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import UserNotifications
 @testable import CarCare
 
 final class FakeNotificationCenter: NotificationCenterProtocol {
@@ -13,8 +14,9 @@ final class FakeNotificationCenter: NotificationCenterProtocol {
 	var removedIdentifiers: [String] = []
 	var removeAllCalled = false
 	var requestAuthorizationCalled = false
-	var granted: Bool = true
-	
+    var granted: Bool = true
+    var fakeSettings = FakeNotificationSettings(authorizationStatus: .authorized)
+
 	func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)?) {
 		addedRequests.append(request)
 		completionHandler?(nil)
@@ -32,4 +34,23 @@ final class FakeNotificationCenter: NotificationCenterProtocol {
 		requestAuthorizationCalled = true
 		return granted
 	}
+    
+    func getPendingNotificationRequests(completionHandler: @escaping ([UNNotificationRequest]) -> Void) {
+           // Renvoie simplement les notifications ajoutées qui n'ont pas été supprimées
+           let pending = addedRequests.filter { request in
+               !removedIdentifiers.contains(request.identifier)
+           }
+           completionHandler(pending)
+       }
+    
+    func notificationSettings() async -> UNNotificationSettings {
+            // On récupère les vrais settings, mais pour le fake on ne peut que créer un objet vide
+            let settings = await UNUserNotificationCenter.current().notificationSettings()
+            return settings
+        }
 }
+
+struct FakeNotificationSettings {
+    var authorizationStatus: UserNotifications.UNAuthorizationStatus
+}
+
