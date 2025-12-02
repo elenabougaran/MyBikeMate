@@ -162,9 +162,15 @@ struct MaintenanceDetailsView: View {
                                         .frame(width: 40, alignment: .center)
                                         .multilineTextAlignment(.center)
                                         .focused($isFocused)
-                                        .keyboardType(.numberPad)
                                         .background(Color(.systemGray6))
                                         .cornerRadius(7)
+                                        .onChange(of: frequencyText) { _, newValue in
+                                            // Garde seulement les chiffres
+                                            let filtered = newValue.filter { $0.isNumber }
+                                            if filtered != newValue {
+                                                frequencyText = filtered
+                                            }
+                                        }
                                         .onChange(of: isFocused) { _, newValue in
                                             if !newValue { // Quand on perd le focus
                                                 saveFrequency()
