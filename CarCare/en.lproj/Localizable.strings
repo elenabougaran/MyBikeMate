@@ -60,6 +60,7 @@
 "premium_feature" = "Premium Feature";
 "share_summary_description" = "Share the full maintenance summary with your mechanic or when selling your bike.";
 "unlock_now" = "Unlock Now";
+"slide_to_zoom" = "Slide to zoom";
 
 //BikePhotoPickerView
 "take_photo" = "Take a photo";
@@ -100,9 +101,8 @@
 
 //MaintenanceDetailsView
 "frequency_key" = "Frequency: ";
-"every_days_key" = "every %d day(s)";
-"every_months_key" = "every %d month(s)";
-"every_year_key" = "every %d year(s)";
+"every" = "Every";
+"days" = "days";
 "button_update_key" = "Update";
 "maintenance_history_key" = "Maintenance history";
 "advice_and_information_key" = "Advice and information";

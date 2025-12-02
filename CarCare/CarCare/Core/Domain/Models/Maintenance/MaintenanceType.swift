@@ -61,16 +61,21 @@ enum MaintenanceType: String, CaseIterable, Identifiable {
 }
 
 extension MaintenanceType: Hashable {
-	var readableFrequency: String {
-		if frequencyInDays < 30 {
-			return String(format: NSLocalizedString("every_days_key", comment: ""), frequencyInDays)
-		} else if frequencyInDays > 364 {
-			return String(format: NSLocalizedString("every_year_key", comment: ""), frequencyInDays/365)
-		} else {
-			let months = frequencyInDays / 30
-			return String(format: NSLocalizedString("every_months_key", comment: ""), months)
-		}
-	}
+    /*var readableFrequency: String {
+        if frequencyInDays < 30 {
+            return String(format: NSLocalizedString("every_x_days", comment: ""), frequencyInDays)
+        } else if frequencyInDays > 364 {
+            let years = frequencyInDays / 365
+            if years == 1 {
+                return NSLocalizedString("every_1_year", comment: "")
+            }
+            return String(format: NSLocalizedString("every_x_years", comment: ""), years)
+        } else {
+            let months = frequencyInDays / 30
+            return String(format: NSLocalizedString("every_x_months", comment: ""), months)
+        }
+    }*/
+
 	
 	var localizedName: String {
 		NSLocalizedString(rawValue, comment: "")

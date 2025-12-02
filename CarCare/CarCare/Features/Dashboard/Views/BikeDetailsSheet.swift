@@ -32,12 +32,6 @@ struct BikeDetailsSheet: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Handle indicator
-           /* Capsule()
-                .fill(Color.gray.opacity(0.4))
-                .frame(width: 40, height: 5)
-                .padding(.top, 12)
-                .padding(.bottom, 20)*/
             DragHandleArea()
                 .frame(height: 80)
             
@@ -266,7 +260,6 @@ struct BikeDetailsSheet: View {
     }
 }
 
-
 struct DragHandleArea: View {
     var body: some View {
         VStack(spacing: 7) {
@@ -277,7 +270,7 @@ struct DragHandleArea: View {
                 .padding(.top, 12)
             
             // Texte d'aide
-            Text("Glisser pour agrandir")
+            Text("slide_to_zoom")
                 .font(.caption)
                 .foregroundColor(.secondary)
         }

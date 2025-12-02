@@ -43,6 +43,7 @@ class MaintenanceVM: ObservableObject {
     
     func defineOverallMaintenanceStatus(for bikeType: BikeType) -> MaintenanceStatus {
         // Cas spécial : pas de maintenances → statut à prévoir
+        print("defineOverallStatus lancé")
         guard !maintenances.isEmpty else {
             return .aPrevoir
         }
@@ -109,22 +110,42 @@ class MaintenanceVM: ObservableObject {
             return .aPrevoir
         }
         
+        // Utiliser la fréquence effective : custom si présente, sinon la valeur par défaut du type
+           let frequency = lastMaintenance.effectiveFrequencyInDays
+
+           // Guard safety (éviter division par zéro)
+           guard frequency > 0 else {
+               return .aPrevoir
+           }
+        
         // Calculer la date de la prochaine maintenance
-        let nextDate = Calendar.current.date(byAdding: .day, value: maintenanceType.frequencyInDays, to: lastMaintenance.date)!
+        let nextDate = Calendar.current.date(byAdding: .day, value: frequency, to: lastMaintenance.date)!
         
         // Nombre de jours restants
         let daysRemaining = Calendar.current.dateComponents([.day], from: Date(), to: nextDate).day ?? 0
-        let frequency = maintenanceType.frequencyInDays
+        print("""
+               determineMaintenanceStatus:
+                 maintenanceType: \(maintenanceType)
+                 lastMaintenance.id: \(lastMaintenance.id)
+                 lastMaintenance.date: \(lastMaintenance.date)
+                 lastMaintenance.customFrequency: \(String(describing: lastMaintenance.customFrequencyInDays))
+                 frequencyUsed: \(frequency)
+                 nextDate: \(nextDate)
+                 daysRemaining: \(daysRemaining)
+               """)
         
-        let proportion = min(max(Double(frequency - daysRemaining) / Double(frequency), 0), 1)
-        
+        let proportion = min(max(Double(daysRemaining) / Double(frequency), 0), 1)
+
         switch proportion {
         case 0..<1/3:
-            return .aJour          // Très récent
+            print("aPrevoir")
+            return .aPrevoir         // Très récent
         case 1/3..<2/3:
+            print("bientotaprevoir")
             return .bientotAPrevoir // À prévoir bientôt
         default:
-            return .aPrevoir       // Dépassé ou urgent
+            print("aJour")
+            return .aJour       // Dépassé ou urgent
         }
     }
     
@@ -160,6 +181,22 @@ class MaintenanceVM: ObservableObject {
         } catch {
             self.error = AppError.unknown
             showAlert = true
+        }
+    }
+    
+    func updateFrequency(maintenance: Maintenance, bikeType: BikeType) {
+        do {
+            try loader.update(maintenance)
+            // Mettre à jour la liste locale
+            if let index = maintenances.firstIndex(where: { $0.id == maintenance.id }) {
+                maintenances[index] = maintenance
+                DispatchQueue.main.async {
+                    self.overallStatus = self.defineOverallMaintenanceStatus(for: bikeType)
+                    print("overallStatus: \(self.overallStatus)")
+                }
+            }
+        } catch {
+            print("error")
         }
     }
     
@@ -205,13 +242,6 @@ class MaintenanceVM: ObservableObject {
         return filtered.max(by: { $0.date < $1.date })
     }
     
-    /*func calculateDaysSinceLastMaintenance(for type: MaintenanceType) -> Int? {
-        guard let last = getLastMaintenance(of: type) else { return nil }
-        let calendar = Calendar.current
-        let now = Date()
-        let components = calendar.dateComponents([.day], from: last.date, to: now)
-        return components.day ?? 0
-    }*/
     func calculateDaysSinceLastMaintenance(for type: MaintenanceType) -> Int? {
         guard let last = getLastMaintenance(of: type) else { return nil }
         

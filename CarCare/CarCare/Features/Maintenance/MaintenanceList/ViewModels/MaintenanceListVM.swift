@@ -35,13 +35,27 @@ final class MaintenanceListVM: ObservableObject {
 		return Calendar.current.dateComponents([.day], from: Date(), to: nextDate).day
 	}
 	
-	func calculateNextMaintenanceDate(for type: MaintenanceType) -> Date? {
-		guard let lastMaintenance = getLastMaintenance(of: type) else { return nil }
-		guard type.frequencyInDays > 0 else { return nil} // Pas de prochaine date pour Unknown
-		return Calendar.current.date(byAdding: .day, value: type.frequencyInDays, to: lastMaintenance.date)
-	}
-	
-	func getLastMaintenance(of type: MaintenanceType) -> Maintenance? {
+    func calculateNextMaintenanceDate(for type: MaintenanceType) -> Date? {
+        /*guard let lastMaintenance = getLastMaintenance(of: type) else { return nil }
+         guard type.frequencyInDays > 0 else { return nil} // Pas de prochaine date pour Unknown
+         return Calendar.current.date(byAdding: .day, value: type.frequencyInDays, to: lastMaintenance.date)*/
+        guard let lastMaintenance = getLastMaintenance(of: type) else { return nil }
+        
+        // ✅ Utiliser effectiveFrequencyInDays au lieu de type.frequencyInDays
+        let frequency = lastMaintenance.effectiveFrequencyInDays
+        guard frequency > 0 else { return nil }
+        
+        return Calendar.current.date(byAdding: .day, value: frequency, to: lastMaintenance.date)
+    }
+    
+    func getEffectiveFrequency(for type: MaintenanceType) -> Int {
+        guard let lastMaintenance = getLastMaintenance(of: type) else {
+            return type.frequencyInDays // Fallback sur la fréquence par défaut
+        }
+        return lastMaintenance.effectiveFrequencyInDays
+    }
+    
+    func getLastMaintenance(of type: MaintenanceType) -> Maintenance? {
 		let filtered = maintenanceVM.maintenances.filter { $0.maintenanceType == type }
 		return filtered.max(by: { $0.date < $1.date })
 	}

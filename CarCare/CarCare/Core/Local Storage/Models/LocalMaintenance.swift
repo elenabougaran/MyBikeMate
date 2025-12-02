@@ -12,4 +12,5 @@ struct LocalMaintenance {
 	let maintenanceType: String
 	let date: Date
 	let reminder: Bool
+    let frequencyInDays: Int?
 }

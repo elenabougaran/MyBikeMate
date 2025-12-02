@@ -27,7 +27,7 @@ final class AddMaintenanceVM: ObservableObject {
 		if let selectedMaintenanceDate = selectedMaintenanceDate {
             let reminderValue = notificationVM.isAuthorized
             
-			let maintenance = Maintenance(id: UUID(), maintenanceType: selectedMaintenanceType, date: selectedMaintenanceDate, reminder: reminderValue)
+			let maintenance = Maintenance(id: UUID(), maintenanceType: selectedMaintenanceType, date: selectedMaintenanceDate, reminder: reminderValue) //valeur par defaut de frequency fournie (enum)
 			do {
 				try maintenanceLoader.save(maintenance)
 #if DEBUG

@@ -14,6 +14,7 @@ class ManagedMaintenance: NSManagedObject {
 	@NSManaged var id: UUID
 	@NSManaged var status: Int
 	@NSManaged var reminder: Bool
+    @NSManaged var frequencyInDays: Int64
 	
 	@NSManaged var vehicle : ManagedBike
 }
@@ -32,6 +33,7 @@ extension ManagedMaintenance {
 		managed.date = local.date
 		managed.id = local.id
 		managed.reminder = local.reminder
+        managed.frequencyInDays = Int64(local.frequencyInDays ?? 0)
 		
 		try context.save()
 
@@ -45,6 +47,8 @@ extension ManagedMaintenance {
 		
 		if let existing = try context.fetch(request).first {
 			existing.reminder = local.reminder
+            existing.frequencyInDays = Int64(local.frequencyInDays ?? 0)
+            print("Fréquence mise à jour dans Core Data")
 			try context.save()
 		}
 	}
@@ -68,6 +72,6 @@ extension ManagedMaintenance {
 	}
 	
 	var local: LocalMaintenance {
-		LocalMaintenance(id: id, maintenanceType: maintenanceType, date: date, reminder: reminder)
+		LocalMaintenance(id: id, maintenanceType: maintenanceType, date: date, reminder: reminder, frequencyInDays: frequencyInDays == 0 ? nil : Int(frequencyInDays))
 	}
 }

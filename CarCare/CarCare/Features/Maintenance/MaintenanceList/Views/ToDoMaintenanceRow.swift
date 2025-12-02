@@ -22,6 +22,7 @@ struct ToDoMaintenanceRow: View {
 		if let maintenanceType = maintenanceType {
 			let daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenanceType)
 			let nextDate = VM.calculateNextMaintenanceDate(for: maintenanceType)
+            let effectiveFrequency = VM.getEffectiveFrequency(for: maintenanceType)
 			
 			HStack {
 				VStack(alignment: .leading, spacing: 3) {
@@ -47,7 +48,7 @@ struct ToDoMaintenanceRow: View {
 				Spacer()
 				
 				VStack(alignment: .trailing) {
-					DaysIndicatorView(days: daysRemaining ?? 0, frequency: maintenanceType.frequencyInDays, rectangleWidth: 20, rectangleHeight: 10, triangleWidth: 5, triangleHeight: 5, spacing: 2)
+					DaysIndicatorView(days: daysRemaining ?? 0, frequency: effectiveFrequency, rectangleWidth: 20, rectangleHeight: 10, triangleWidth: 5, triangleHeight: 5, spacing: 2)
 					
 					if let nextDate = nextDate {
 						Text("\(formatter.string(from: nextDate))")

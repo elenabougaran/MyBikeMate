@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24299" systemVersion="25A354" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24411" systemVersion="25A362" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="ManagedBike" representedClassName="ManagedBike" syncable="YES">
         <attribute name="bikeType" attributeType="String"/>
         <attribute name="brand" attributeType="String"/>
@@ -12,6 +12,7 @@
     </entity>
     <entity name="ManagedMaintenance" representedClassName="ManagedMaintenance" syncable="YES">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="frequencyInDays" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="maintenanceType" attributeType="String"/>
         <attribute name="reminder" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>

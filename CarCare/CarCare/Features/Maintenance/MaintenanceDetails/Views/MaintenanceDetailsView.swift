@@ -22,6 +22,8 @@ struct MaintenanceDetailsView: View {
 	@State private var hasTriggeredHaptic = false
 	var onAdd: () -> Void
     let haptic = UIImpactFeedbackGenerator(style: .medium)
+    @State private var frequencyText: String = ""
+    @FocusState private var isFocused: Bool
 	
 	//MARK: -Initialization
 	init(bikeVM: BikeVM, maintenanceVM: MaintenanceVM, maintenanceID: UUID, onAdd: @escaping () -> Void, notificationVM: NotificationViewModel) {
@@ -45,8 +47,8 @@ struct MaintenanceDetailsView: View {
                                     .fill(
                                         LinearGradient(
                                             colors: [
-                                                color(for: daysRemaining, frequency: maintenance.maintenanceType.frequencyInDays).opacity(0.9),
-                                                color(for: daysRemaining, frequency: maintenance.maintenanceType.frequencyInDays).opacity(0.25)
+                                                color(for: daysRemaining, frequency: maintenance.effectiveFrequencyInDays).opacity(0.9),
+                                                color(for: daysRemaining, frequency: maintenance.effectiveFrequencyInDays).opacity(0.25)
                                             ],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
@@ -78,7 +80,7 @@ struct MaintenanceDetailsView: View {
                                 
                                 if let daysRemaining = daysRemaining {
                                     Text(
-                                        NSLocalizedString(message(for: daysRemaining, frequency: maintenance.maintenanceType.frequencyInDays), comment: "")
+                                        NSLocalizedString(message(for: daysRemaining, frequency: maintenance.effectiveFrequencyInDays), comment: "")
                                     )
                                     .padding(.horizontal, 10)
                                     .padding(.top, 5)
@@ -94,17 +96,18 @@ struct MaintenanceDetailsView: View {
                             }
                             .padding(.vertical, 15)
                         }
-                        
+
                         HStack(spacing: 20) {
                             VStack {
                                 VStack(spacing: 15) {
                                     if let daysSince = maintenanceVM.calculateDaysSinceLastMaintenance(
                                         for: maintenance.maintenanceType
                                     ) {
-                                        let frequency = Double(maintenance.maintenanceType.frequencyInDays)
+                                        let frequency = Double(maintenance.effectiveFrequencyInDays)
                                         let progress = min(Double(daysSince) / frequency, 1.0)
                                         
                                         CircularProgressView(targetProgress: progress, value: daysSince)
+                                            .id(daysRemaining)
                                             .accessibilityElement(children: .combine)
                                             .accessibilityLabel("Progress since last maintenance")
                                             .accessibilityValue("\(daysSince) out of \(Int(frequency)) days")
@@ -150,9 +153,28 @@ struct MaintenanceDetailsView: View {
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                 
-                                Text("\(maintenance.maintenanceType.readableFrequency)")
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .font(.system(size: 18, weight: .regular, design: .default))
+                                    Text(NSLocalizedString("every", comment: ""))
+                                    .font(.system(size: 16, weight: .regular, design: .default))
+                                            .frame(maxWidth: .infinity, alignment: .center)
+
+                                HStack {
+                                    TextField("", text: $frequencyText)
+                                        .frame(width: 40, alignment: .center)
+                                        .multilineTextAlignment(.center)
+                                        .focused($isFocused)
+                                        .keyboardType(.numberPad)
+                                        .background(Color(.systemGray6))
+                                        .cornerRadius(7)
+                                        .onChange(of: isFocused) { _, newValue in
+                                            if !newValue { // Quand on perd le focus
+                                                saveFrequency()
+                                            }
+                                        }
+                                    
+                                    Text(NSLocalizedString("days", comment: ""))
+                                }
+                                .font(.system(size: 16, weight: .regular, design: .default))
+                                .frame(maxWidth: .infinity, alignment: .center)
                                 
                                 Toggle("", isOn: Binding(
                                     get: { maintenance.reminder }, //appelé lors du dessin de la vue (aussi après modif du toggle pour redessiner la vue)
@@ -162,7 +184,7 @@ struct MaintenanceDetailsView: View {
                                     }
                                 ))
                                 .frame(maxWidth: .infinity)
-                                .padding(.top, 10)
+                                .padding(.top, 5)
                                 .tint(Color("DoneColor"))
                                 .labelsHidden()
                                 .accessibilityLabel("Reminder")
@@ -174,6 +196,8 @@ struct MaintenanceDetailsView: View {
                                         }
                                     }
                                 }
+                                    Text("Fréquence conseillée : tous les \(maintenance.maintenanceType.frequencyInDays) jours")
+                                        .font(.system(size: 10, weight: .regular, design: .default))
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                             .foregroundColor(Color("TextColor"))
@@ -307,16 +331,30 @@ struct MaintenanceDetailsView: View {
 				Spacer()
 			}
             .padding(.bottom, 60)
-			.onAppear {
+			/*.onAppear {
+                //frequencyText = "\(maintenance.effectiveFrequencyInDays)"
+                
                 haptic.impactOccurred()
-				maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
-				daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType)
-			}
+				//maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
+				//daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType)
+                refreshData()
+			}*/
+            .onAppear {
+                guard let maintenance = maintenanceVM.maintenances.first(where: { $0.id == maintenanceID }) else {
+                    return
+                }
+                
+                frequencyText = "\(maintenance.effectiveFrequencyInDays)"
+                
+                haptic.impactOccurred()
+                refreshData()
+            }
 			.onChange(of: maintenanceVM.maintenances) {_, _ in
-				if let maintenance = maintenanceVM.maintenances.first(where: { $0.id == maintenanceID }) {
-					maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
-					daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType)
-				}
+				//if let maintenance = maintenanceVM.maintenances.first(where: { $0.id == maintenanceID }) {
+					//maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
+					//daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType)
+                refreshData()
+				//}
 			}
 			.background(Color("BackgroundColor"))
 			.navigationBarBackButtonHidden(true)
@@ -398,6 +436,10 @@ struct MaintenanceDetailsView: View {
                     }
                 }
             }
+            /*.onChange(of: frequencyText) { _, newValue in
+                maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
+                daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType)
+            }*/
 		} else {
 			Text("Maintenance not found")
                 .accessibilityLabel("Maintenance not found")
@@ -407,28 +449,31 @@ struct MaintenanceDetailsView: View {
 
 extension MaintenanceDetailsView {
 	func message(for days: Int, frequency: Int) -> String {
-		let proportion = min(max(Double(frequency - days) / Double(frequency), 0), 1)
+		let proportion = min(max(Double(days) / Double(frequency), 0), 1)
         
         switch proportion {
         case 0..<1/3:
-            return NSLocalizedString("maintenance_up_to_date", comment: "")
+            return NSLocalizedString("maintenance_due", comment: "")
         case 1/3..<2/3:
             return NSLocalizedString("maintenance_not_yet", comment: "")
         default:
-            return NSLocalizedString("maintenance_due", comment: "")
+            return NSLocalizedString("maintenance_up_to_date", comment: "")
         }
     }
     
     func color(for days: Int, frequency: Int) -> Color {
-        let proportion = min(max(Double(frequency - days) / Double(frequency), 0), 1)
-
+        let proportion = min(max(Double(days) / Double(frequency), 0), 1)
+        print("🎨 color() appelé:")
+            print("   days: \(days)")
+            print("   frequency: \(frequency)")
+            print("   proportion: \(proportion)")
 		switch proportion {
 		case 0..<1/3:
-			return Color("DoneColor")
+			return Color("ToDoColor")
 		case 1/3..<2/3:
 			return Color("InProgressColor")
 		default:
-			return Color("ToDoColor")
+			return Color("DoneColor")
 		}
 	}
 	
@@ -451,6 +496,52 @@ extension MaintenanceDetailsView {
 			UINotificationFeedbackGenerator().notificationOccurred(.warning)
 		}
 	}
+    
+    private func saveFrequency() {
+        if let maintenance = maintenanceVM.maintenances.first(where: { $0.id == maintenanceID }) {
+            
+            // Valider l'entrée
+            guard let newFrequency = Int(frequencyText),
+                  newFrequency > 0,
+                  newFrequency <= 365 else {
+                // Restaurer la valeur précédente si invalide
+                frequencyText = "\(maintenance.effectiveFrequencyInDays)"
+                return
+            }
+            
+            // Déterminer si c'est une valeur personnalisée
+            let defaultFrequency = maintenance.maintenanceType.frequencyInDays
+            let customFrequency: Int? = (newFrequency != defaultFrequency) ? newFrequency : nil
+            
+            // Ne rien faire si la valeur n'a pas changé
+            guard customFrequency != maintenance.customFrequencyInDays else {
+                return
+            }
+            
+            // Mettre à jour
+            var updatedMaintenance = maintenance
+            updatedMaintenance.customFrequencyInDays = customFrequency
+            
+            maintenanceVM.updateFrequency(maintenance: updatedMaintenance, bikeType: bikeVM.bikeType)
+        }
+    }
+    
+    private func refreshData() {
+        guard let maintenance = maintenanceVM.maintenances.first(where: { $0.id == maintenanceID }) else {
+                return
+            }
+        let effectiveFrequency = maintenance.effectiveFrequencyInDays
+            
+            maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
+            
+            let newDaysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType, effectiveFrequency: effectiveFrequency) ?? 0
+            daysRemaining = newDaysRemaining
+                        
+            print("🔄 refreshData appelé:")
+            print("   daysRemaining: \(daysRemaining)") // ✅ Devrait afficher juste "3"
+            print("   frequency: \(maintenance.effectiveFrequencyInDays)")
+        print("   couleur: \(color(for: daysRemaining ?? 0, frequency: maintenance.effectiveFrequencyInDays))")
+    }
 }
 
 extension MaintenanceDetailsView {

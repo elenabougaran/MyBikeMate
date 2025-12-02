@@ -59,6 +59,7 @@
 "premium_feature" = "Fonctionnalité Premium";
 "share_summary_description" = "Partagez le résumé complet de vos entretiens avec votre réparateur ou lors de la vente de votre vélo.";
 "unlock_now" = "Débloquer maintenant";
+"slide_to_zoom" = "Glisser pour agrandir";
 
 //BikePhotoPickerView
 "take_photo" = "Prendre une photo";
@@ -99,9 +100,8 @@
 
 //MaintenanceDetailsView
 "frequency_key" = "Fréquence: ";
-"every_days_key" = "tous les %d jour(s)";
-"every_months_key" = "tous les %d mois";
-"every_year_key" = "tous les %d ans";
+"every" = "Tous les";
+"days" = "jours";
 "button_update_key" = "Mettre à jour";
 "maintenance_history_key" = "Historique d'entretien";
 "advice_and_information_key" = "Conseils & infos";

@@ -24,21 +24,27 @@ final class MaintenanceDetailsVM: ObservableObject {
 		guard let nextDate = calculateNextMaintenanceDate(for: type) else { return nil}
 		return Calendar.current.dateComponents([.day], from: Date(), to: nextDate).day
 	}*/
-    func calculateDaysUntilNextMaintenance(type: MaintenanceType) -> Int? {
-        guard let nextDate = calculateNextMaintenanceDate(for: type) else { return nil }
+    func calculateDaysUntilNextMaintenance(type: MaintenanceType, effectiveFrequency: Int) -> Int? {
+        guard let nextDate = calculateNextMaintenanceDate(for: type, frequency: effectiveFrequency) else { return nil }
         
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let nextDay = calendar.startOfDay(for: nextDate)
-        
+        print("📊 calculateDaysUntilNextMaintenance: \(calendar.dateComponents([.day], from: today, to: nextDay).day)")
         return calendar.dateComponents([.day], from: today, to: nextDay).day
     }
 	
-	func calculateNextMaintenanceDate(for type: MaintenanceType) -> Date? {
+	/*func calculateNextMaintenanceDate(for type: MaintenanceType, effectiveFrequency: Int -> Date? {
 		guard let lastMaintenance = getLastMaintenance(of: type) else { return nil }
 		guard type.frequencyInDays > 0 else { return nil} // Pas de prochaine date pour Unknown
+        print("calculateNextMaintenanceDate: \(Calendar.current.date(byAdding: .day, value: type.frequencyInDays, to: lastMaintenance.date))")
 		return Calendar.current.date(byAdding: .day, value: type.frequencyInDays, to: lastMaintenance.date)
-	}
+	}*/
+    func calculateNextMaintenanceDate(for type: MaintenanceType, frequency: Int) -> Date? {
+        guard let lastMaintenance = getLastMaintenance(of: type) else { return nil }
+        guard frequency > 0 else { return nil }
+        return Calendar.current.date(byAdding: .day, value: frequency, to: lastMaintenance.date)
+    }
 	
 	func getLastMaintenance(of type: MaintenanceType) -> Maintenance? {
 		let filtered = maintenanceVM.maintenances.filter { $0.maintenanceType == type }
