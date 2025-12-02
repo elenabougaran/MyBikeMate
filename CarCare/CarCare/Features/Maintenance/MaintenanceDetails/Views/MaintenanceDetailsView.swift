@@ -331,14 +331,6 @@ struct MaintenanceDetailsView: View {
 				Spacer()
 			}
             .padding(.bottom, 60)
-			/*.onAppear {
-                //frequencyText = "\(maintenance.effectiveFrequencyInDays)"
-                
-                haptic.impactOccurred()
-				//maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
-				//daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType)
-                refreshData()
-			}*/
             .onAppear {
                 guard let maintenance = maintenanceVM.maintenances.first(where: { $0.id == maintenanceID }) else {
                     return
@@ -350,11 +342,7 @@ struct MaintenanceDetailsView: View {
                 refreshData()
             }
 			.onChange(of: maintenanceVM.maintenances) {_, _ in
-				//if let maintenance = maintenanceVM.maintenances.first(where: { $0.id == maintenanceID }) {
-					//maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
-					//daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType)
                 refreshData()
-				//}
 			}
 			.background(Color("BackgroundColor"))
 			.navigationBarBackButtonHidden(true)
@@ -427,19 +415,11 @@ struct MaintenanceDetailsView: View {
             }
             .onChange(of: scenePhase) { oldPhase, newPhase in
                 if newPhase == .active {
-#if DEBUG
-                    print("🔄 App redevenue active - vérification des autorisations")
-#endif
-                    
                     Task {
                         await notificationVM.checkAuthorizationStatus()
                     }
                 }
             }
-            /*.onChange(of: frequencyText) { _, newValue in
-                maintenancesForOneType = VM.fetchAllMaintenanceForOneType(type: maintenance.maintenanceType)
-                daysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType)
-            }*/
 		} else {
 			Text("Maintenance not found")
                 .accessibilityLabel("Maintenance not found")
@@ -463,10 +443,6 @@ extension MaintenanceDetailsView {
     
     func color(for days: Int, frequency: Int) -> Color {
         let proportion = min(max(Double(days) / Double(frequency), 0), 1)
-        print("🎨 color() appelé:")
-            print("   days: \(days)")
-            print("   frequency: \(frequency)")
-            print("   proportion: \(proportion)")
 		switch proportion {
 		case 0..<1/3:
 			return Color("ToDoColor")
@@ -536,11 +512,6 @@ extension MaintenanceDetailsView {
             
             let newDaysRemaining = VM.calculateDaysUntilNextMaintenance(type: maintenance.maintenanceType, effectiveFrequency: effectiveFrequency) ?? 0
             daysRemaining = newDaysRemaining
-                        
-            print("🔄 refreshData appelé:")
-            print("   daysRemaining: \(daysRemaining)") // ✅ Devrait afficher juste "3"
-            print("   frequency: \(maintenance.effectiveFrequencyInDays)")
-        print("   couleur: \(color(for: daysRemaining ?? 0, frequency: maintenance.effectiveFrequencyInDays))")
     }
 }
 

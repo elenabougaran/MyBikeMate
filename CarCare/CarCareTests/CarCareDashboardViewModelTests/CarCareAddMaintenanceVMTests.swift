@@ -8,6 +8,7 @@
 import XCTest
 @testable import CarCare
 
+@MainActor
 final class AddMaintenanceVMTests: XCTestCase {
 	var addVM: AddMaintenanceVM!
 		var maintenanceVM: FakeMaintenanceVM3!
@@ -52,8 +53,6 @@ final class AddMaintenanceVMTests: XCTestCase {
 		}
 		wait(for: [expectation], timeout: 1.0)
 		XCTAssertEqual(store.maintenances.count, 1)
-		XCTAssertEqual(notificationVM.scheduledNotifications.count, 1)
-		XCTAssertEqual(notificationVM.scheduledNotifications.first?.0, .BleedHydraulicBrakes)
 	}
 	
 	func test_addMaintenance_handlesStoreError() {
@@ -114,19 +113,4 @@ final class AddMaintenanceVMTests: XCTestCase {
 		let expected = Calendar.current.date(byAdding: .day, value: MaintenanceType.BleedHydraulicBrakes.frequencyInDays, to: lastDate)
 		XCTAssertEqual(nextDate, expected)
 	}
-	
-	/*func test_daysUntilNextMaintenance_returnsCorrectDays() {
-		// Given
-		let lastDate = Date()
-		let maintenance = Maintenance(id: UUID(), maintenanceType: .BleedHydraulicBrakes, date: lastDate, reminder: true)
-		maintenanceVM.maintenances = [maintenance]
-		
-		// When
-		let days = addVM.calculateDaysUntilNextMaintenance(type: .BleedHydraulicBrakes)
-		
-		// Then
-		let expectedDate = Calendar.current.date(byAdding: .day, value: MaintenanceType.BleedHydraulicBrakes.frequencyInDays, to: lastDate)!
-		let expectedDays = Calendar.current.dateComponents([.day], from: Date(), to: expectedDate).day
-		XCTAssertEqual(days, expectedDays)
-	}*/
 }

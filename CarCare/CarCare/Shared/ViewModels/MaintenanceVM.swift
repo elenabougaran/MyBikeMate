@@ -43,7 +43,6 @@ class MaintenanceVM: ObservableObject {
     
     func defineOverallMaintenanceStatus(for bikeType: BikeType) -> MaintenanceStatus {
         // Cas spécial : pas de maintenances → statut à prévoir
-        print("defineOverallStatus lancé")
         guard !maintenances.isEmpty else {
             return .aPrevoir
         }
@@ -123,29 +122,16 @@ class MaintenanceVM: ObservableObject {
         
         // Nombre de jours restants
         let daysRemaining = Calendar.current.dateComponents([.day], from: Date(), to: nextDate).day ?? 0
-        print("""
-               determineMaintenanceStatus:
-                 maintenanceType: \(maintenanceType)
-                 lastMaintenance.id: \(lastMaintenance.id)
-                 lastMaintenance.date: \(lastMaintenance.date)
-                 lastMaintenance.customFrequency: \(String(describing: lastMaintenance.customFrequencyInDays))
-                 frequencyUsed: \(frequency)
-                 nextDate: \(nextDate)
-                 daysRemaining: \(daysRemaining)
-               """)
-        
+
         let proportion = min(max(Double(daysRemaining) / Double(frequency), 0), 1)
 
         switch proportion {
         case 0..<1/3:
-            print("aPrevoir")
-            return .aPrevoir         // Très récent
+            return .aPrevoir
         case 1/3..<2/3:
-            print("bientotaprevoir")
-            return .bientotAPrevoir // À prévoir bientôt
+            return .bientotAPrevoir
         default:
-            print("aJour")
-            return .aJour       // Dépassé ou urgent
+            return .aJour
         }
     }
     
@@ -192,11 +178,10 @@ class MaintenanceVM: ObservableObject {
                 maintenances[index] = maintenance
                 DispatchQueue.main.async {
                     self.overallStatus = self.defineOverallMaintenanceStatus(for: bikeType)
-                    print("overallStatus: \(self.overallStatus)")
                 }
             }
         } catch {
-            print("error")
+            let appError = AppError.saveDataFailed(.saveFailed)
         }
     }
     
@@ -256,26 +241,15 @@ class MaintenanceVM: ObservableObject {
     func toggleReminder(for maintenanceID: UUID, value: Bool) {
         // 1️⃣ Trouver l'index de la maintenance
         guard let index = maintenances.firstIndex(where: { $0.id == maintenanceID }) else {
-#if DEBUG
-            print("⚠️ toggleReminder: Maintenance introuvable pour ID \(maintenanceID)")
-#endif
             return
         }
         
         // 2️⃣ Vérifier si la valeur a vraiment changé (éviter les updates inutiles)
         guard maintenances[index].reminder != value else {
-#if DEBUG
-            print("ℹ️ toggleReminder: Valeur déjà à \(value) pour \(maintenances[index].maintenanceType.localizedName)")
-#endif
             return
         }
         
         // 3️⃣ Mettre à jour la valeur
         maintenances[index].reminder = value
-        
-#if DEBUG
-        print("✅ toggleReminder: \(maintenances[index].maintenanceType.localizedName) → \(value ? "ON" : "OFF")")
-#endif
-        
     }
 }

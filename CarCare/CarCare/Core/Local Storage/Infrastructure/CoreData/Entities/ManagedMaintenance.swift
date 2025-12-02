@@ -48,7 +48,6 @@ extension ManagedMaintenance {
 		if let existing = try context.fetch(request).first {
 			existing.reminder = local.reminder
             existing.frequencyInDays = Int64(local.frequencyInDays ?? 0)
-            print("Fréquence mise à jour dans Core Data")
 			try context.save()
 		}
 	}

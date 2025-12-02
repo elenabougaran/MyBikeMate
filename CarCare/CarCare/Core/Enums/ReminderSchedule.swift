@@ -82,12 +82,8 @@ enum ReminderSchedule: Equatable {
             return [.monthBefore, .finalWeek]
             
         default:
-            // Maintenance longue durée → J-30, J-14 et J-7
-            return [.monthBefore, .twoWeeksBefore, .finalWeek]
+            // Maintenance longue durée → J-30 et J-7
+            return [.monthBefore, .finalWeek]
         }
     }
-    
-   /* static var allSchedules: [ReminderSchedule] {
-        return [.monthBefore, .finalWeek]
-    }*/
 }

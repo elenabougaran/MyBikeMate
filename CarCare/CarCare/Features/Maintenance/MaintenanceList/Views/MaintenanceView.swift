@@ -37,8 +37,8 @@ struct MaintenanceView: View {
 	var body: some View {
 		let sortedKeys = VM.sortMaintenanceKeys(from: maintenanceVM.maintenances)
 		ZStack {
-			Color("BackgroundColor") // fond principal
-					.ignoresSafeArea()  // couvre tout l’écran
+			Color("BackgroundColor")
+					.ignoresSafeArea()  
 			VStack(spacing: 20) {
 				VStack {
 					if let lastMaintenanceByType = lastMaintenanceByType {

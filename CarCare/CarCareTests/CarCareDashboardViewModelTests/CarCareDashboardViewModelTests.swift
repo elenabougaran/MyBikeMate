@@ -8,9 +8,11 @@
 import XCTest
 @testable import CarCare
 
+@MainActor
 final class CarCareDashboardViewModelTests: XCTestCase {
 	var dashboardVM: DashboardVM!
 	var maintenanceVM: FakeMaintenanceVM3!
+    var bikeVM: FakeBikeVM!
 	var store: FakeMaintenanceStore!
 	var loader: FakeMaintenanceLoader!
 		
@@ -19,7 +21,8 @@ final class CarCareDashboardViewModelTests: XCTestCase {
 		maintenanceVM = FakeMaintenanceVM3()
 		store = FakeMaintenanceStore()
 		loader = FakeMaintenanceLoader(store: store)
-		dashboardVM = DashboardVM(maintenanceLoader: loader, maintenanceVM: maintenanceVM)
+        bikeVM = FakeBikeVM()
+        dashboardVM = DashboardVM(maintenanceLoader: loader, maintenanceVM: maintenanceVM, bikeVM: bikeVM)
 	}
 	
 	override func tearDown() {

@@ -84,8 +84,22 @@ extension ToDoMaintenanceRow {
     }
 }
 	
-	
-	/*#Preview {
-	 MaintenanceRow(viewModel: <#T##MaintenanceVM#>)
-	 }
-	 */
+struct ToDoMaintenanceRow_Previews: PreviewProvider {
+
+    class MockVM: MaintenanceListVM {
+        override func calculateDaysUntilNextMaintenance(type: MaintenanceType) -> Int? { 50 }
+        override func calculateNextMaintenanceDate(for type: MaintenanceType) -> Date? {
+            Calendar.current.date(byAdding: .day, value: 50, to: Date())
+        }
+        override func getEffectiveFrequency(for type: MaintenanceType) -> Int { 180 }
+    }
+
+    static var previews: some View {
+        ToDoMaintenanceRow(
+            VM: MockVM(maintenanceVM: MaintenanceVM()),
+            maintenanceType: .BleedHydraulicBrakes
+        )
+        .padding()
+        .previewLayout(.sizeThatFits)
+    }
+}

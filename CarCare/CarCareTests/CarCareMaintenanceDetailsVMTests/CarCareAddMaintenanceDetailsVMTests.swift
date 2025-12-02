@@ -50,27 +50,41 @@ final class CarCareAddMaintenanceDetailsVMTests: XCTestCase {
 		maintenanceVM.maintenances = [maintenance]
 		
 		// When
-		let nextDate = vm.calculateNextMaintenanceDate(for: .BleedHydraulicBrakes)
+        let nextDate = vm.calculateNextMaintenanceDate(for: .BleedHydraulicBrakes, frequency: 90)
 		
 		// Then
-		let expected = Calendar.current.date(byAdding: .day, value: MaintenanceType.BleedHydraulicBrakes.frequencyInDays, to: lastDate)
+		let expected = Calendar.current.date(byAdding: .day, value: 90, to: lastDate)
 		XCTAssertEqual(nextDate, expected)
 	}
-	
-	func test_daysUntilNextMaintenance_returnsCorrectDays() {
-		// Given
-		let lastDate = Date().addingTimeInterval(-5*24*3600) // 5 jours avant
-		let maintenance = Maintenance(id: UUID(), maintenanceType: .BleedHydraulicBrakes, date: lastDate, reminder: true)
-		maintenanceVM.maintenances = [maintenance]
-		
-		// When
-		let days = vm.calculateDaysUntilNextMaintenance(type: .BleedHydraulicBrakes)
-		
-		// Then
-		let expectedDate = Calendar.current.date(byAdding: .day, value: MaintenanceType.BleedHydraulicBrakes.frequencyInDays, to: lastDate)!
-		let expectedDays = Calendar.current.dateComponents([.day], from: Date(), to: expectedDate).day
-		XCTAssertEqual(days, expectedDays)
-	}
+    
+    func  test_daysUntilNextMaintenance_returnsCorrectDays() {
+        // Given
+        let calendar = Calendar.current
+        let now = calendar.startOfDay(for: Date()) // aujourd'hui, heure mise à 00:00
+        let lastDate = calendar.date(byAdding: .day, value: -5, to: now)! // 5 jours avant aujourd'hui
+        let maintenance = Maintenance(
+            id: UUID(),
+            maintenanceType: .BleedHydraulicBrakes,
+            date: lastDate,
+            reminder: true
+        )
+        maintenanceVM.maintenances = [maintenance]
+
+        // Frequency à tester
+        let effectiveFrequency = 90
+
+        // When
+        let nextDate = vm.calculateNextMaintenanceDate(for: .BleedHydraulicBrakes, frequency: effectiveFrequency)
+        let days = vm.calculateDaysUntilNextMaintenance(type: .BleedHydraulicBrakes, effectiveFrequency: effectiveFrequency)
+
+        // Then
+        let expectedNextDate = calendar.date(byAdding: .day, value: effectiveFrequency, to: lastDate)!
+        let expectedDays = calendar.dateComponents([.day], from: now, to: expectedNextDate).day
+
+        XCTAssertEqual(nextDate, expectedNextDate)
+        XCTAssertEqual(days, expectedDays)
+    }
+
 	
 	func test_fetchAllMaintenanceForOneType_returnsOnlyOneType() throws {
 		// Given

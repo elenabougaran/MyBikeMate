@@ -38,10 +38,8 @@ class NotificationViewModel: ObservableObject {
     
     //Vérifier l'état actuel des autorisations
     func checkAuthorizationStatus() async {
-        // ✅ Utilisez votre protocol
         let settings = await notificationCenter.notificationSettings()
         
-        // ✅ UNAuthorizationStatus est l'enum natif d'iOS
         switch settings.authorizationStatus {
         case .authorized, .provisional:
             self.isAuthorized = true
@@ -51,19 +49,9 @@ class NotificationViewModel: ObservableObject {
             self.isAuthorized = false
             self.error = .notificationPermissionDenied
             cancelAllNotifications()
-            
-            #if DEBUG
-            print("❌ Notifications refusées par l'utilisateur")
-            #endif
-            
         case .notDetermined:
             self.isAuthorized = false
             self.error = nil
-            
-            #if DEBUG
-            print("⏳ Notifications non encore demandées")
-            #endif
-            
         case .ephemeral:
             // Cas spécifique aux App Clips
             self.isAuthorized = false
@@ -71,47 +59,32 @@ class NotificationViewModel: ObservableObject {
         @unknown default:
             // Gestion des futurs cas ajoutés par Apple
             self.isAuthorized = false
-            
-            #if DEBUG
-            print("⚠️ Statut de notification inconnu")
-            #endif
         }
     }
 	
     func requestAndScheduleNotifications() async {
-        // 1️⃣ D'abord vérifier l'état actuel
+        // D'abord vérifier l'état actuel
         let settings = await notificationCenter.notificationSettings()
         
         switch settings.authorizationStatus {
         case .authorized, .provisional:
-            // ✅ Déjà autorisé, rien à faire
+            // Déjà autorisé, rien à faire
             self.isAuthorized = true
             self.error = nil
-            
-            #if DEBUG
-            print("✅ Notifications déjà autorisées")
-            #endif
             return
             
         case .denied:
-            // ❌ L'utilisateur a déjà refusé
+            // L'utilisateur a déjà refusé
             self.isAuthorized = false
-            //self.showSettingsAlert = true
             self.error = .notificationPermissionDenied
             cancelAllNotifications()
-            
-            #if DEBUG
-            print("❌ Notifications déjà refusées - impossible de redemander")
-            #endif
             return
             
         case .notDetermined:
-            // ⏳ Pas encore demandé, on peut demander
             break
             
         case .ephemeral:
             self.isAuthorized = false
-           // self.showSettingsAlert = true
             self.error = .notificationPermissionDenied
             return
             
@@ -120,44 +93,28 @@ class NotificationViewModel: ObservableObject {
             return
         }
         
-        // 2️⃣ Demander l'autorisation (seulement si notDetermined)
+        // Demander l'autorisation (seulement si notDetermined)
         do {
             let granted = try await notificationCenter.requestAuthorization(options: [.alert, .sound, .badge])
             
             if granted {
                 self.isAuthorized = true
                 self.error = nil
-                
-                #if DEBUG
-                print("✅ Autorisation accordée")
-                #endif
-                
             } else {
-                // ❌ L'utilisateur vient de refuser
+                //  L'utilisateur vient de refuser
                 self.isAuthorized = false
-                //self.showSettingsAlert = true 
                 self.error = .notificationPermissionDenied
                 cancelAllNotifications()
-                
-                #if DEBUG
-                print("❌ Autorisation refusée par l'utilisateur")
-                #endif
             }
             
         } catch {
-            // ⚠️ Erreur système lors de la demande
             self.isAuthorized = false
             self.error = .notificationAuthorizationFailed
-            
-            #if DEBUG
-            print("❌ Erreur lors de la demande d'autorisation : \(error.localizedDescription)")
-            #endif
         }
     }
     
     func scheduleNotifications(for type: MaintenanceType, until endDate: Date) {
         guard isAuthorized else {
-            print("❌ Notifications non autorisées")
             return
         }
 
@@ -168,7 +125,7 @@ class NotificationViewModel: ObservableObject {
         var notificationCount = 0
         
         let frequencyInDays = type.frequencyInDays
-        // ✅ Obtenir les paliers de rappel adaptés à cette fréquence
+        // Obtenir les paliers de rappel adaptés à cette fréquence
             let schedules = ReminderSchedule.schedules(for: frequencyInDays)
         
         // Pour chaque palier de rappel (J-30 et J-7)
@@ -188,21 +145,8 @@ class NotificationViewModel: ObservableObject {
                     schedule: schedule
                 )
                 notificationCount += 1
-                
-                #if DEBUG
-                let daysUntilNotif = calendar.dateComponents([.day], from: Date(), to: notificationDate).day ?? 0
-                print("📅 Notification J-\(schedule.daysBeforeMaintenance) planifiée")
-                print("   Date : \(notificationDate.formatted(date: .abbreviated, time: .shortened))")
-                print("   Dans : \(daysUntilNotif) jours")
-                #endif
-            } else {
-                #if DEBUG
-                print("⏭️ Notification J-\(schedule.daysBeforeMaintenance) déjà passée")
-                #endif
             }
         }
-        
-        print("✅ \(notificationCount) notification(s) planifiée(s) pour \(type.localizedName)")
     }
     
     private func scheduleNotification(
@@ -251,11 +195,7 @@ class NotificationViewModel: ObservableObject {
         
         notificationCenter.add(request) { error in
             if let error = error {
-                print("❌ Erreur planification : \(error.localizedDescription)")
-            } else {
-                #if DEBUG
-                print("✅ Notification ajoutée : \(identifier)")
-                #endif
+                let appError = AppError.notificationSchedulingFailed(error)
             }
         }
     }
@@ -269,43 +209,27 @@ class NotificationViewModel: ObservableObject {
                 .filter { $0.identifier.hasPrefix("\(type.id)-") }
                 .map { $0.identifier }
             
-            print("🗑️ Suppression de \(identifiersToRemove.count) notifications pour \(type.localizedName)")
             center.removePendingNotificationRequests(withIdentifiers: identifiersToRemove)
-            //notificationCenter.removePendingNotificationRequests(withIdentifiers: [type.id])
         }
     }
         
     func cancelAllNotifications() {
-        // 1️⃣ D'abord annuler les notifications système
+        // D'abord annuler les notifications système
         notificationCenter.removeAllPendingNotificationRequests()
-#if DEBUG
-        print("🗑️ Toutes les notifications système annulées")
-#endif
-        // 2️⃣ Ensuite désactiver UNIQUEMENT les rappels actifs dans CoreData
+
+        // Ensuite désactiver UNIQUEMENT les rappels actifs dans CoreData
         for maintenance in maintenanceVM.maintenances where maintenance.reminder {
             maintenanceVM.toggleReminder(for: maintenance.id, value: false)
-            
-#if DEBUG
-            print("🔕 Rappel désactivé pour \(maintenance.maintenanceType.localizedName)")
-#endif
         }
-        
-#if DEBUG
-        print("✅ Tous les rappels désactivés")
-#endif
     }
 	
     func updateReminder(for maintenanceID: UUID, value: Bool) {
         guard let maintenance = maintenanceVM.maintenances.first(where: { $0.id == maintenanceID }) else {
-            print("⚠️ Maintenance introuvable")
             return
         }
-        
         let type = maintenance.maintenanceType
-
         if value {
             guard isAuthorized else {
-                print("⚠️ Notifications non autorisées")
                 self.showSettingsAlert = true
                 maintenanceVM.toggleReminder(for: maintenanceID, value: false)
                 self.error = .notificationPermissionDenied
@@ -313,7 +237,6 @@ class NotificationViewModel: ObservableObject {
             }
             
             guard let nextDate = maintenanceVM.nextMaintenanceDate(for: type) else {
-                print("⚠️ Aucune date de maintenance trouvée")
                 return
             }
             
@@ -321,17 +244,10 @@ class NotificationViewModel: ObservableObject {
             let daysRemaining = calendar.dateComponents([.day], from: Date(), to: nextDate).day ?? 0
             
             if daysRemaining > 0 {
-                print("✅ Activation des rappels pour \(type.localizedName)")
-                print("📅 Maintenance le : \(nextDate.formatted(date: .long, time: .omitted))")
-                print("⏱️ Dans \(daysRemaining) jours")
-                
                 scheduleNotifications(for: type, until: nextDate)
-            } else {
-                print("⚠️ La maintenance est déjà passée")
             }
             
         } else {
-            print("🔕 Désactivation des rappels pour \(type.localizedName)")
             cancelNotifications(for: type)
         }
     }
@@ -339,18 +255,11 @@ class NotificationViewModel: ObservableObject {
 //ouvre les reglages de l'iphone quand l'utilisateur veut mettre sur on le toggle alors qu'il n'a pas accepté les notifs
     func openSettings() {
         guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
-            #if DEBUG
-            print("❌ Impossible d'ouvrir les Réglages")
-            #endif
             return
         }
         
         if UIApplication.shared.canOpenURL(settingsURL) {
             UIApplication.shared.open(settingsURL)
-            
-            #if DEBUG
-            print("📱 Ouverture des Réglages iOS")
-            #endif
         }
     }
 }

@@ -30,24 +30,14 @@ final class AddMaintenanceVM: ObservableObject {
 			let maintenance = Maintenance(id: UUID(), maintenanceType: selectedMaintenanceType, date: selectedMaintenanceDate, reminder: reminderValue) //valeur par defaut de frequency fournie (enum)
 			do {
 				try maintenanceLoader.save(maintenance)
-#if DEBUG
-        print("💾 Maintenance sauvegardée : \(maintenance.maintenanceType.localizedName)")
-        #endif
                 
-                // 2️⃣ Ajouter à la liste immédiatement
+                // Ajouter à la liste immédiatement
                 maintenanceVM.maintenances.append(maintenance)
                 maintenanceVM.overallStatus = maintenanceVM.defineOverallMaintenanceStatus(for: bikeType)
                 
 				maintenanceVM.fetchAllMaintenance(for: bikeType)
                 if reminderValue {
                     notificationVM.updateReminder(for: maintenance.id, value: true)
-#if DEBUG
-            print("✅ Maintenance ajoutée avec rappel activé")
-            #endif
-                } else {
-#if DEBUG
-            print("✅ Maintenance ajoutée sans rappel (notifications non autorisées)")
-            #endif
                 }
 			} catch let error as LoadingCocoaError { //erreurs de load
 				self.error = AppError.loadingDataFailed(error)

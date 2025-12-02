@@ -8,6 +8,7 @@
 import XCTest
 @testable import CarCare
 
+@MainActor
 final class CarCareBikeVMTests: XCTestCase {
 	
 	var store: FakeBikeStore!

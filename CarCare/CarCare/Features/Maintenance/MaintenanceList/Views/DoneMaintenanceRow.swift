@@ -32,6 +32,17 @@ struct DoneMaintenanceRow: View {
     }
 }
 
-/*#Preview {
-    DoneMaintenanceRow()
-}*/
+struct DoneMaintenanceRow_Previews: PreviewProvider {
+    static var previews: some View {
+        DoneMaintenanceRow(
+            maintenance: Maintenance(
+                id: UUID(),
+                maintenanceType: .BleedHydraulicBrakes,
+                date: Date(),
+                customFrequencyInDays: nil
+            )
+        )
+        .padding()
+        .previewLayout(.sizeThatFits)
+    }
+}

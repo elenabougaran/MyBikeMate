@@ -51,6 +51,7 @@
 		F39891512E77101400245639 /* ExportPDFHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39891502E77101400245639 /* ExportPDFHelper.swift */; };
 		F39891562E771D0E00245639 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39891552E771D0E00245639 /* PaywallView.swift */; };
 		F39891582E77233200245639 /* PlanSelectorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39891572E77233200245639 /* PlanSelectorButton.swift */; };
+		F3A0D96B2EDF4CBB00CA26A1 /* FakeBikeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A0D96A2EDF4CBB00CA26A1 /* FakeBikeVM.swift */; };
 		F3B77C942E50714E00548F2D /* MaintenanceStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B77C932E50714E00548F2D /* MaintenanceStatus.swift */; };
 		F3B77C962E5080D000548F2D /* AddMaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B77C952E5080D000548F2D /* AddMaintenanceView.swift */; };
 		F3B77CA62E50DF9300548F2D /* BikeModificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B77CA52E50DF9300548F2D /* BikeModificationsView.swift */; };
@@ -155,6 +156,7 @@
 		F39891502E77101400245639 /* ExportPDFHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPDFHelper.swift; sourceTree = "<group>"; };
 		F39891552E771D0E00245639 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		F39891572E77233200245639 /* PlanSelectorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanSelectorButton.swift; sourceTree = "<group>"; };
+		F3A0D96A2EDF4CBB00CA26A1 /* FakeBikeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeBikeVM.swift; sourceTree = "<group>"; };
 		F3B77C932E50714E00548F2D /* MaintenanceStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceStatus.swift; sourceTree = "<group>"; };
 		F3B77C952E5080D000548F2D /* AddMaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMaintenanceView.swift; sourceTree = "<group>"; };
 		F3B77CA52E50DF9300548F2D /* BikeModificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeModificationsView.swift; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 				F36E4A5B2E7D70EC00EB2FF5 /* FakeMaintenanceVM3.swift */,
 				F36E4A5D2E7D86A700EB2FF5 /* CarCareAddMaintenanceVMTests.swift */,
 				F36E4A5F2E7D877800EB2FF5 /* FakeNotificationVM.swift */,
+				F3A0D96A2EDF4CBB00CA26A1 /* FakeBikeVM.swift */,
 			);
 			path = CarCareDashboardViewModelTests;
 			sourceTree = "<group>";
@@ -925,6 +928,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A0D96B2EDF4CBB00CA26A1 /* FakeBikeVM.swift in Sources */,
 				F36E4A532E7D6CD600EB2FF5 /* FakeNotificationCenter.swift in Sources */,
 				F36E4A652E7D8BDA00EB2FF5 /* FakeMaintenanceLoader.swift in Sources */,
 				F36E4A592E7D70B100EB2FF5 /* CarCareDashboardViewModelTests.swift in Sources */,

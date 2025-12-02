@@ -8,14 +8,13 @@
 import Foundation
 import UIKit
 
-final class BikeVM: ObservableObject {
+class BikeVM: ObservableObject {
 	//MARK: -Public properties
 	@Published var model: String = ""
 	@Published var brand: String = ""
 	@Published var mileage: Int = 0
 	@Published var year: Int = 0
 	@Published var bike: Bike? = nil 
-	//@Published var models: [String] = ["Unknown"]
 	@Published var bikeType: BikeType = .Manual
 	@Published var identificationNumber: String = ""
 	@Published var error: AppError?

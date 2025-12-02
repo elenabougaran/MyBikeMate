@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class MaintenanceListVM: ObservableObject {
+class MaintenanceListVM: ObservableObject {
 	private let maintenanceVM: MaintenanceVM
 	private let maintenanceLoader: LocalMaintenanceLoader
 	@Published var error: AppError?
@@ -36,12 +36,8 @@ final class MaintenanceListVM: ObservableObject {
 	}
 	
     func calculateNextMaintenanceDate(for type: MaintenanceType) -> Date? {
-        /*guard let lastMaintenance = getLastMaintenance(of: type) else { return nil }
-         guard type.frequencyInDays > 0 else { return nil} // Pas de prochaine date pour Unknown
-         return Calendar.current.date(byAdding: .day, value: type.frequencyInDays, to: lastMaintenance.date)*/
         guard let lastMaintenance = getLastMaintenance(of: type) else { return nil }
         
-        // ✅ Utiliser effectiveFrequencyInDays au lieu de type.frequencyInDays
         let frequency = lastMaintenance.effectiveFrequencyInDays
         guard frequency > 0 else { return nil }
         
