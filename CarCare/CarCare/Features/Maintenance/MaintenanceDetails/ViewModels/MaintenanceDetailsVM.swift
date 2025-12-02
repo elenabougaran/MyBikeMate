@@ -20,10 +20,19 @@ final class MaintenanceDetailsVM: ObservableObject {
 		self.maintenanceVM = maintenanceVM
 	}
 	
-	func calculateDaysUntilNextMaintenance(type: MaintenanceType) -> Int? {
+	/*func calculateDaysUntilNextMaintenance(type: MaintenanceType) -> Int? {
 		guard let nextDate = calculateNextMaintenanceDate(for: type) else { return nil}
 		return Calendar.current.dateComponents([.day], from: Date(), to: nextDate).day
-	}
+	}*/
+    func calculateDaysUntilNextMaintenance(type: MaintenanceType) -> Int? {
+        guard let nextDate = calculateNextMaintenanceDate(for: type) else { return nil }
+        
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let nextDay = calendar.startOfDay(for: nextDate)
+        
+        return calendar.dateComponents([.day], from: today, to: nextDay).day
+    }
 	
 	func calculateNextMaintenanceDate(for type: MaintenanceType) -> Date? {
 		guard let lastMaintenance = getLastMaintenance(of: type) else { return nil }

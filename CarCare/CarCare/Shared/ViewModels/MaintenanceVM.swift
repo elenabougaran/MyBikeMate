@@ -205,11 +205,21 @@ class MaintenanceVM: ObservableObject {
         return filtered.max(by: { $0.date < $1.date })
     }
     
-    func calculateDaysSinceLastMaintenance(for type: MaintenanceType) -> Int? {
+    /*func calculateDaysSinceLastMaintenance(for type: MaintenanceType) -> Int? {
         guard let last = getLastMaintenance(of: type) else { return nil }
         let calendar = Calendar.current
         let now = Date()
         let components = calendar.dateComponents([.day], from: last.date, to: now)
+        return components.day ?? 0
+    }*/
+    func calculateDaysSinceLastMaintenance(for type: MaintenanceType) -> Int? {
+        guard let last = getLastMaintenance(of: type) else { return nil }
+        
+        let calendar = Calendar.current
+        let lastDay = calendar.startOfDay(for: last.date)
+        let today = calendar.startOfDay(for: Date())
+        
+        let components = calendar.dateComponents([.day], from: lastDay, to: today)
         return components.day ?? 0
     }
     
