@@ -68,10 +68,21 @@ struct DashboardView: View {
                                         let newPosition = sheetPosition + (value.translation.height / geometry.size.height)
                                         
                                         // Snap vers medium (0.5) ou large (0.1)
-                                        if newPosition < 0.3 {
+                                        /*if newPosition < 0.3 {
                                             sheetPosition = 0.2 // Position haute
                                         } else {
                                             sheetPosition = 0.7 // Position basse
+                                        }*/
+                                        let velocity = value.predictedEndTranslation.height / geometry.size.height
+                                        
+                                        if velocity < -0.5 { // Swipe rapide vers le haut
+                                            sheetPosition = 0.2
+                                        } else if velocity > 0.5 { // Swipe rapide vers le bas
+                                            sheetPosition = 0.7
+                                        } else if newPosition < 0.45 { // Swipe lent, snap selon position
+                                            sheetPosition = 0.2
+                                        } else {
+                                            sheetPosition = 0.7
                                         }
                                         
                                         dragOffset = 0

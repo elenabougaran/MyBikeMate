@@ -195,7 +195,9 @@ class NotificationViewModel: ObservableObject {
         
         notificationCenter.add(request) { error in
             if let error = error {
-                let appError = AppError.notificationSchedulingFailed(error)
+                Task { @MainActor in
+                    self.error = AppError.notificationSchedulingFailed(error)
+                }
             }
         }
     }

@@ -33,7 +33,7 @@ struct BikeDetailsSheet: View {
     var body: some View {
         VStack(spacing: 0) {
             DragHandleArea()
-                .frame(height: 80)
+                .frame(height: 50)
             
                 ScrollView {
                     VStack(spacing: 20) {

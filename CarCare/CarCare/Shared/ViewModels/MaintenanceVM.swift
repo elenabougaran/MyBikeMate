@@ -181,7 +181,7 @@ class MaintenanceVM: ObservableObject {
                 }
             }
         } catch {
-            let appError = AppError.saveDataFailed(.saveFailed)
+            self.error = AppError.saveDataFailed(.saveFailed)
         }
     }
     
